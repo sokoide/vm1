@@ -4,150 +4,130 @@ namespace vm1_lib
 {
     public class Cpu
     {
-        #region inner class
-        public class Instruction
-        {
-            String name;
-            int numOperands = 0;
 
-            public String Name
-            {
-                get { return Name; }
-            }
-
-            public int NumOperands
-            {
-                get { return NumOperands; }
-            }
-
-            public Instruction(String name, int numOperands = 0)
-            {
-                this.name = name;
-                this.numOperands = numOperands;
-            }
-        }
-        #endregion
 
         // consts
         public const int kStackSize = 128;
 
         // registers
-        public int ip;
-        public int sp = -1;
-        int fp;
+        internal int ip;
+        internal int sp;
+        internal int fp;
 
         // memory
-        int[] data;
-        int[] code;
-        public int[] stack;
+        internal int[] data;
+        internal int[] code;
+        internal int[] stack;
 
-        public const int IADD = 1;
-        public const int ISUB = 2;
-        public const int IMUL = 3;
-        public const int ILT = 4;
-        public const int IEQ = 5;
-        public const int BR = 6;
-        public const int BRT = 7;
-        public const int BRF = 8;
-        public const int ICONST = 9;
-        public const int LOAD = 10;
-        public const int GLOAD = 11;
-        public const int STORE = 12;
-        public const int GSTORE = 13;
-        public const int PRINT = 14;
-        public const int POP = 15;
-        public const int CALL = 16;
-        public const int RET = 17;
-        public const int HALT = 18;
-
-        public static Instruction[] Instructions = {
-            new Instruction("iadd"),
-            new Instruction("isub"),
-            new Instruction("imul"),
-            new Instruction("ilt"),
-            new Instruction("ieq"),
-            new Instruction("br", 1),
-            new Instruction("brt", 1),
-            new Instruction("brf", 1),
-            new Instruction("iconst", 1),
-            new Instruction("load", 1),
-            new Instruction("gload", 1),
-            new Instruction("store", 1),
-            new Instruction("gstore", 1),
-            new Instruction("print", 1),
-            new Instruction("pop", 1),
-            new Instruction("call", 2),
-            new Instruction("ret"),
-            new Instruction("halt", 1),
-        };
+        // other variables
+        internal bool traceOutput;
 
         #region ctor
-        public Cpu(int[] code, int ip, int dataSize)
+        public Cpu(int[] code, int ip, int dataSize, bool traceOutput = false)
         {
             this.code = code;
             this.ip = ip;
+            this.sp = -1;
             data = new int[dataSize];
             stack = new int[kStackSize];
+            this.traceOutput = traceOutput;
         }
         #endregion
 
-        public void Run(){
+        public void Run()
+        {
             int a, b, v;
-            while (ip < code.Length)
+            bool running = true;
+            while (ip < code.Length && running)
             {
                 int opcode = code[ip];
+                ByteCode.Instruction instruction = ByteCode.Instructions[opcode];
+                trace("{0:d04}: {1}", ip, instruction.Name);
+                if (instruction.NumOperands == 1)
+                {
+                    trace("\t{0}", code[ip + 1]);
+                }
+                else if (instruction.NumOperands == 2)
+                {
+                    trace("\t{0}", code[ip + 2]);
+                }
+                traceln("");
+
                 ip++;
+
                 switch (opcode)
                 {
-                    case IADD:
+                    case ByteCode.IADD:
                         a = stack[sp--];
                         b = stack[sp--];
                         v = b + a;
                         stack[++sp] = v;
                         break;
-                    case ISUB:
+                    case ByteCode.ISUB:
                         a = stack[sp--];
                         b = stack[sp--];
                         v = b - a;
                         stack[++sp] = v;
                         break;
-                    case IMUL:
+                    case ByteCode.IMUL:
                         a = stack[sp--];
                         b = stack[sp--];
                         v = b * a;
                         stack[++sp] = v;
                         break;
-                    case ILT:
+                    case ByteCode.ILT:
                         break;
-                    case IEQ:
+                    case ByteCode.IEQ:
                         break;
-                    case BR:
+                    case ByteCode.BR:
                         break;
-                    case BRT:
+                    case ByteCode.BRT:
                         break;
-                    case BRF:
+                    case ByteCode.BRF:
                         break;
-                    case ICONST:
+                    case ByteCode.ICONST:
                         v = code[ip++];
                         stack[++sp] = v;
                         break;
-                    case LOAD:
+                    case ByteCode.LOAD:
                         break;
-                    case GLOAD:
+                    case ByteCode.GLOAD:
                         break;
-                    case STORE:
+                    case ByteCode.STORE:
                         break;
-                    case PRINT:
+                    case ByteCode.PRINT:
                         break;
-                    case POP:
+                    case ByteCode.POP:
                         break;
-                    case CALL:
+                    case ByteCode.CALL:
                         break;
-                    case RET:
+                    case ByteCode.RET:
                         break;
-                    case HALT:
-                        return;
+                    case ByteCode.HALT:
+                        running = false;
+                        break;
                 }
+                dump();
+            }
+        }
+
+        private void dump()
+        {
+        }
+
+        private void trace(string fmt, params object[] p)
+        {
+            if (traceOutput)
+            {
+                Console.Error.Write(fmt, p);
+            }
+        }
+
+        private void traceln(string fmt, params object[] p)
+        {
+            if (traceOutput)
+            {
+                Console.Error.WriteLine(fmt, p);
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using vm1_lib;
 using Xunit;
 
@@ -25,10 +26,11 @@ namespace vm1_test
         [Fact]
         public void TestRunSimple()
         {
+            Console.Error.WriteLine("* TestRunSimple");
             int[] code = {
-                Cpu.ICONST, 99, Cpu.HALT,
+                ByteCode.ICONST, 99, ByteCode.HALT,
             };
-            Cpu cpu = new Cpu(code, 0, 0);
+            Cpu cpu = new Cpu(code, 0, 0, true);
             cpu.Run();
 
             Assert.Equal(3, cpu.ip);
@@ -38,10 +40,11 @@ namespace vm1_test
         [Fact]
         public void TestAdd()
         {
+            Console.Error.WriteLine("* TestAdd");
             int[] code = {
-                Cpu.ICONST, 5, Cpu.ICONST, 2, Cpu.IADD, Cpu.HALT,
+                ByteCode.ICONST, 5, ByteCode.ICONST, 2, ByteCode.IADD, ByteCode.HALT,
             };
-            Cpu cpu = new Cpu(code, 0, 0);
+            Cpu cpu = new Cpu(code, 0, 0, true);
             cpu.Run();
 
             Assert.Equal(6, cpu.ip);
@@ -52,10 +55,11 @@ namespace vm1_test
         [Fact]
         public void TestSub()
         {
+            Console.Error.WriteLine("* TestSub");
             int[] code = {
-                Cpu.ICONST, 5, Cpu.ICONST, 7, Cpu.ISUB, Cpu.HALT,
+                ByteCode.ICONST, 5, ByteCode.ICONST, 7, ByteCode.ISUB, ByteCode.HALT,
             };
-            Cpu cpu = new Cpu(code, 0, 0);
+            Cpu cpu = new Cpu(code, 0, 0, true);
             cpu.Run();
 
             Assert.Equal(6, cpu.ip);
@@ -66,10 +70,11 @@ namespace vm1_test
         [Fact]
         public void TestMul()
         {
+            Console.Error.WriteLine("* TestMul");
             int[] code = {
-                Cpu.ICONST, 5, Cpu.ICONST, 7, Cpu.IMUL, Cpu.HALT,
+                ByteCode.ICONST, 5, ByteCode.ICONST, 7, ByteCode.IMUL, ByteCode.HALT,
             };
-            Cpu cpu = new Cpu(code, 0, 0);
+            Cpu cpu = new Cpu(code, 0, 0, true);
             cpu.Run();
 
             Assert.Equal(6, cpu.ip);
