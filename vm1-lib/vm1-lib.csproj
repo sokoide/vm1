@@ -5,4 +5,7 @@
     <RootNamespace>vm1_lib</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Instruction.cs" />
+  </ItemGroup>
 </Project>
