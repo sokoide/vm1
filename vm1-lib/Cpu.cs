@@ -4,8 +4,6 @@ namespace vm1_lib
 {
     public class Cpu
     {
-
-
         // consts
         public const int kStackSize = 128;
 
@@ -36,7 +34,7 @@ namespace vm1_lib
 
         public void Run()
         {
-            int a, b, v, addr, offset;
+            int a, b, v, addr, offset, nargs;
             bool running = true;
             while (ip < code.Length && running)
             {
@@ -90,7 +88,8 @@ namespace vm1_lib
                         break;
                     case ByteCode.BRT:
                         addr = code[ip++];
-                        if (stack[sp--]==1){
+                        if (stack[sp--] == 1)
+                        {
                             ip = addr;
                         }
                         break;
@@ -128,12 +127,29 @@ namespace vm1_lib
                         sp--;
                         break;
                     case ByteCode.CALL:
+                        addr = code[ip++];
+                        nargs = code[ip++];
+                        stack[++sp] = nargs;
+                        stack[++sp] = fp;
+                        stack[++sp] = ip;
+                        fp = sp;
+                        ip = addr;
                         break;
                     case ByteCode.RET:
+                        v = stack[sp--];
+                        sp = fp;
+                        ip = stack[sp--];
+                        fp = stack[sp--];
+                        nargs = stack[sp--];
+                        sp -= nargs; // pop all args
+                        stack[++sp] = v;
                         break;
                     case ByteCode.HALT:
                         running = false;
                         break;
+                    default:
+                        throw new NotImplementedException(
+                            string.Format("Instruction {0} not implemented.", opcode));
                 }
                 dump();
             }

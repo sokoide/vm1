@@ -108,5 +108,42 @@ namespace vm1_test
             Assert.Equal(expected, cpu.stack[0]);
         }
 
+        // TBD: LOAD/STORE
+
+        // TBD: GLOAD/GSTORE
+
+        // CALL/RET
+        [Fact]
+        public void TestFunction()
+        {
+            Console.Error.WriteLine("* TestFunction");
+            int[] code = {
+                // FACT(n) funciton
+                // if N<2 return 1
+                ByteCode.LOAD, -3, // 0
+                ByteCode.ICONST, 2, // 2
+                ByteCode.ILT, // 4
+                ByteCode.BRF, 10, // 5
+                ByteCode.ICONST, 1, // 7
+                ByteCode.RET, // 9
+                // return N * FACT(N-1)
+                ByteCode.LOAD, -3, // 10
+                ByteCode.LOAD, -3, // 12
+                ByteCode.ICONST, 1, // 14
+                ByteCode.ISUB, // 16
+                ByteCode.CALL, 0, 1, // 17
+                ByteCode.IMUL, // 20
+                ByteCode.RET, // 21
+                // print FACT(6)
+                ByteCode.ICONST, 6, // 22 ... main (entry)
+                ByteCode.CALL, 0, 1, // 14
+                ByteCode.PRINT, // 27
+                ByteCode.HALT,
+            };
+            Cpu cpu = new Cpu(code, 22, 0, true);
+            cpu.Run();
+            // FACT(6) = 6 * 5 * 4 * 3 * 2 * 1 = 720
+            Assert.Equal(720, cpu.stack[0]);
+        }
     }
 }

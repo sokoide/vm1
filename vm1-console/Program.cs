@@ -7,6 +7,7 @@ namespace vm1_console
         static void Main(string[] args)
         {
             Console.WriteLine("* vm1-console started");
+            Console.WriteLine(" This doesn't do anything for now");
             Console.WriteLine("* vm1-console completed");
         }
     }
