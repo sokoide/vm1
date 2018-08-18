@@ -108,11 +108,66 @@ namespace vm1_test
             Assert.Equal(expected, cpu.stack[0]);
         }
 
-        // TBD: LOAD/STORE
+        // GSTORE
+        [Fact]
+        public void TestGstore()
+        {
+            Console.Error.WriteLine("* TestGstore");
+            int[] code = {
+                ByteCode.ICONST, 42, ByteCode.GSTORE, 2, ByteCode.HALT,
+            };
+            Cpu cpu = new Cpu(code, 0, 10, true);
+            cpu.Run();
 
-        // TBD: GLOAD/GSTORE
+            Assert.Equal(5, cpu.ip);
+            Assert.Equal(-1, cpu.sp);
+            Assert.Equal(0, cpu.globals[0]);
+            Assert.Equal(0, cpu.globals[1]);
+            Assert.Equal(42, cpu.globals[2]);
+        }
 
-        // CALL/RET
+        // GLOAD
+        [Fact]
+        public void TestGload()
+        {
+            Console.Error.WriteLine("* TestGload");
+            int[] code = {
+                ByteCode.GLOAD, 1, ByteCode.HALT,
+            };
+            Cpu cpu = new Cpu(code, 0, 10, true);
+            cpu.globals[1] = 42;
+            cpu.Run();
+
+            Assert.Equal(3, cpu.ip);
+            Assert.Equal(0, cpu.sp);
+            Assert.Equal(42, cpu.stack[0]);
+        }
+
+        // STORE
+        [Fact]
+        public void TestStore()
+        {
+            Console.Error.WriteLine("* TestStore");
+            int[] code = {
+                ByteCode.ICONST, 100, ByteCode.ICONST, 101, ByteCode.STORE, 1, ByteCode.HALT,
+            };
+            Cpu cpu = new Cpu(code, 0, 10, true);
+            cpu.fp = 0;
+            cpu.stack[0] = 1; // arg1
+            cpu.stack[1] = 1; // nargs
+            cpu.stack[2] = 0; // previous fp
+            cpu.stack[3] = 1; // return address
+            cpu.sp = 3;
+            cpu.fp = cpu.sp;
+            cpu.Run();
+
+            Assert.Equal(7, cpu.ip);
+            Assert.Equal(4, cpu.sp);
+            Assert.Equal(3, cpu.fp);
+            Assert.Equal(101, cpu.stack[4]); // 100 is overwritten to 101 by STORE
+        }
+
+        // CALL/RET/LOAD/ILT/BRF
         [Fact]
         public void TestFunction()
         {
