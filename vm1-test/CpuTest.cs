@@ -167,6 +167,117 @@ namespace vm1_test
             Assert.Equal(101, cpu.stack[4]); // 100 is overwritten to 101 by STORE
         }
 
+        // BR
+        [Fact]
+        public void TestBranch()
+        {
+            Console.Error.WriteLine("* TestBranch");
+            int[] code = {
+                ByteCode.BR, 3, // 0
+                ByteCode.HALT,  // 2
+                ByteCode.ICONST, 42, // 3
+                ByteCode.HALT, // 5
+            };
+            Cpu cpu = new Cpu(code, 0, 0, true);
+            cpu.Run();
+            Assert.Equal(42, cpu.stack[0]);
+            Assert.Equal(6, cpu.ip);
+        }
+
+        // BRF
+        [Fact]
+        public void TestBranchFalse1()
+        {
+            Console.Error.WriteLine("* TestBranchFalse1");
+            int[] code = {
+                ByteCode.ICONST, 0, // 0
+                ByteCode.BRF, 5, // 2
+                ByteCode.HALT,  // 4
+                ByteCode.ICONST, 42, // 5
+                ByteCode.HALT, // 7
+            };
+            Cpu cpu = new Cpu(code, 0, 0, true);
+            cpu.Run();
+            Assert.Equal(42, cpu.stack[0]);
+            Assert.Equal(8, cpu.ip);
+            Assert.Equal(0, cpu.sp);
+        }
+
+        [Fact]
+        public void TestBranchFalse2()
+        {
+            Console.Error.WriteLine("* TestBranchFalse2");
+            int[] code = {
+                ByteCode.ICONST, 1, // 0
+                ByteCode.BRF, 5, // 2
+                ByteCode.HALT,  // 4
+                ByteCode.ICONST, 42, // 5
+                ByteCode.HALT, // 7
+            };
+            Cpu cpu = new Cpu(code, 0, 0, true);
+            cpu.Run();
+            Assert.Equal(1, cpu.stack[0]);
+            Assert.Equal(5, cpu.ip);
+            Assert.Equal(-1, cpu.sp);
+        }
+
+        // BRT
+        [Fact]
+        public void TestBranchTrue1()
+        {
+            Console.Error.WriteLine("* TestBranchTrue1");
+            int[] code = {
+                ByteCode.ICONST, 0, // 0
+                ByteCode.BRT, 5, // 2
+                ByteCode.HALT,  // 4
+                ByteCode.ICONST, 42, // 5
+                ByteCode.HALT, // 7
+            };
+            Cpu cpu = new Cpu(code, 0, 0, true);
+            cpu.Run();
+            Assert.Equal(0, cpu.stack[0]);
+            Assert.Equal(5, cpu.ip);
+            Assert.Equal(-1, cpu.sp);
+        }
+
+        [Fact]
+        public void TestBranchTrue2()
+        {
+            Console.Error.WriteLine("* TestBranchTrue2");
+            int[] code = {
+                ByteCode.ICONST, 1, // 0
+                ByteCode.BRT, 5, // 2
+                ByteCode.HALT,  // 4
+                ByteCode.ICONST, 42, // 5
+                ByteCode.HALT, // 7
+            };
+            Cpu cpu = new Cpu(code, 0, 0, true);
+            cpu.Run();
+
+            Assert.Equal(42, cpu.stack[0]);
+            Assert.Equal(8, cpu.ip);
+            Assert.Equal(0, cpu.sp);
+        }
+
+        // POP
+        [Fact]
+        public void TestPop()
+        {
+            Console.Error.WriteLine("* TestPop");
+            int[] code = {
+                ByteCode.ICONST, 1, // 0 sp->0
+                ByteCode.ICONST, 2, // 2 sp->1
+                ByteCode.ICONST, 3, // 4 sp->2
+                ByteCode.POP, // 6 sp->1
+                ByteCode.HALT, // 7
+            };
+            Cpu cpu = new Cpu(code, 0, 0, true);
+            cpu.Run();
+
+            Assert.Equal(8, cpu.ip);
+            Assert.Equal(1, cpu.sp);
+        }
+
         // CALL/RET/LOAD/ILT/BRF
         [Fact]
         public void TestFunction()
