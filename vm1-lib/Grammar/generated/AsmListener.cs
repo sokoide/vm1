@@ -269,6 +269,18 @@ public interface IAsmListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitHaltStmt([NotNull] AsmParser.HaltStmtContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>labelStmt</c>
+	/// labeled alternative in <see cref="AsmParser.stmt"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLabelStmt([NotNull] AsmParser.LabelStmtContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>labelStmt</c>
+	/// labeled alternative in <see cref="AsmParser.stmt"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLabelStmt([NotNull] AsmParser.LabelStmtContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>blankStmt</c>
 	/// labeled alternative in <see cref="AsmParser.stmt"/>.
 	/// </summary>
@@ -280,6 +292,18 @@ public interface IAsmListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitBlankStmt([NotNull] AsmParser.BlankStmtContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>labelExpr</c>
+	/// labeled alternative in <see cref="AsmParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLabelExpr([NotNull] AsmParser.LabelExprContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>labelExpr</c>
+	/// labeled alternative in <see cref="AsmParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLabelExpr([NotNull] AsmParser.LabelExprContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>intExpr</c>
 	/// labeled alternative in <see cref="AsmParser.expr"/>.

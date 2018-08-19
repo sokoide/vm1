@@ -13,15 +13,15 @@ namespace vm1_lib
         public const int BRT = 7;
         public const int BRF = 8;
         public const int ICONST = 9;
-        public const int LOAD = 10;
-        public const int GLOAD = 11;
-        public const int STORE = 12;
-        public const int GSTORE = 13;
-        public const int PRINT = 14;
-        public const int POP = 15;
-        public const int CALL = 16;
-        public const int RET = 17;
-        public const int HALT = 18;
+        public const int LOAD = 10;     // 0x0A
+        public const int GLOAD = 11;    // 0x0B
+        public const int STORE = 12;    // 0x0C
+        public const int GSTORE = 13;   // 0x0D
+        public const int PRINT = 14;    // 0x0E
+        public const int POP = 15;      // 0x0F
+        public const int CALL = 16;     // 0x10
+        public const int RET = 17;      // 0x11
+        public const int HALT = 18;     // 0x12
 
         #region inner class
         public class Instruction

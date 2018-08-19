@@ -17,7 +17,7 @@ namespace vm1_test
         }
 
         [Fact]
-        public void TestAsmCompiler()
+        public void TestAsmCompilerBasic()
         {
             AsmCompiler c = new AsmCompiler();
             MemoryStream mso = new MemoryStream();
@@ -35,6 +35,8 @@ namespace vm1_test
             c.Run(new AntlrInputStream(msi), mso);
             mso.Flush();
 
+            OutputBinaryStream(mso);
+
             byte[] result = mso.ToArray();
             Assert.Equal(40, result.Length);
             Assert.Equal(0x09, result[0]);
@@ -45,8 +47,68 @@ namespace vm1_test
             Assert.Equal(0x00, result[5]);
             Assert.Equal(0x00, result[6]);
             Assert.Equal(0x00, result[7]);
+        }
+
+        [Fact]
+        public void TestAsmCompilerLabalBranch()
+        {
+            AsmCompiler c = new AsmCompiler();
+            MemoryStream mso = new MemoryStream();
+            MemoryStream msi = MakeInput(new string[]{
+                "br LABEL1:",   // addr 0: code: 6, 7
+                "halt",         // addr 2: code: 18
+                "brt LABEL2:",  // addr 3, code: 7, 8
+                "brf LABEL3:",  // addr 5, code: 8, 8
+                "LABEL1:",      // (only label)
+                "halt",         // addr 7: code 18
+                "LABEL2:",      // (only label)
+                "LABEL3:",      // (only label)
+                "halt",         // addr 8: code 18
+            });
+
+            c.Run(new AntlrInputStream(msi), mso);
+            mso.Flush();
 
             OutputBinaryStream(mso);
+
+            byte[] result = mso.ToArray();
+            Assert.Equal(36, result.Length);
+            Assert.Equal(0x06, result[0]);  // br LABEL1:
+            Assert.Equal(0x00, result[1]);
+            Assert.Equal(0x00, result[2]);
+            Assert.Equal(0x00, result[3]);
+            Assert.Equal(0x07, result[4]);
+            Assert.Equal(0x00, result[5]);
+            Assert.Equal(0x00, result[6]);
+            Assert.Equal(0x00, result[7]);
+            Assert.Equal(0x12, result[8]);  // halt
+            Assert.Equal(0x00, result[9]);
+            Assert.Equal(0x00, result[10]);
+            Assert.Equal(0x00, result[11]);
+            Assert.Equal(0x07, result[12]); // brt LABEL2:
+            Assert.Equal(0x00, result[13]);
+            Assert.Equal(0x00, result[14]);
+            Assert.Equal(0x00, result[15]);
+            Assert.Equal(0x08, result[16]);
+            Assert.Equal(0x00, result[17]);
+            Assert.Equal(0x00, result[18]);
+            Assert.Equal(0x00, result[19]);
+            Assert.Equal(0x08, result[20]); // brf LABEL3:
+            Assert.Equal(0x00, result[21]);
+            Assert.Equal(0x00, result[22]);
+            Assert.Equal(0x00, result[23]);
+            Assert.Equal(0x08, result[24]);
+            Assert.Equal(0x00, result[25]);
+            Assert.Equal(0x00, result[26]);
+            Assert.Equal(0x00, result[27]);
+            Assert.Equal(0x12, result[28]); // halt
+            Assert.Equal(0x00, result[29]);
+            Assert.Equal(0x00, result[30]);
+            Assert.Equal(0x00, result[31]);
+            Assert.Equal(0x12, result[32]); // halt
+            Assert.Equal(0x00, result[33]);
+            Assert.Equal(0x00, result[34]);
+            Assert.Equal(0x00, result[35]);
         }
 
         #region private methods
@@ -58,7 +120,7 @@ namespace vm1_test
                 AddCodeLine(msi, codeLine);
             }
             msi.Flush();
-            msi.Seek(0, 0);
+            msi.Seek(0, SeekOrigin.Begin);
             return msi;
         }
 
@@ -74,7 +136,7 @@ namespace vm1_test
 
             output.WriteLine("Code Length: 0x{0:X4} = {0}", m.Length);
 
-            m.Seek(0, 0);
+            m.Seek(0, SeekOrigin.Begin);
             for (ip = 0; ip < m.Length; ip++)
             {
                 sb.AppendFormat("{0:X2}", m.ReadByte());

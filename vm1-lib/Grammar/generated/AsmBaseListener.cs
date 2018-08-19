@@ -313,6 +313,20 @@ public partial class AsmBaseListener : IAsmListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitHaltStmt([NotNull] AsmParser.HaltStmtContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>labelStmt</c>
+	/// labeled alternative in <see cref="AsmParser.stmt"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLabelStmt([NotNull] AsmParser.LabelStmtContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>labelStmt</c>
+	/// labeled alternative in <see cref="AsmParser.stmt"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLabelStmt([NotNull] AsmParser.LabelStmtContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>blankStmt</c>
 	/// labeled alternative in <see cref="AsmParser.stmt"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -326,6 +340,20 @@ public partial class AsmBaseListener : IAsmListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitBlankStmt([NotNull] AsmParser.BlankStmtContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>labelExpr</c>
+	/// labeled alternative in <see cref="AsmParser.expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLabelExpr([NotNull] AsmParser.LabelExprContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>labelExpr</c>
+	/// labeled alternative in <see cref="AsmParser.expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLabelExpr([NotNull] AsmParser.LabelExprContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>intExpr</c>
 	/// labeled alternative in <see cref="AsmParser.expr"/>.

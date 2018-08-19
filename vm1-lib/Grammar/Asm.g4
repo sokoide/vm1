@@ -33,13 +33,14 @@ stmt: NOP NEWLINE					# nopStmt
 	| CALL expr expr NEWLINE		# callStmt
 	| RET NEWLINE					# retStmt
 	| HALT NEWLINE					# haltStmt
+	| LABEL NEWLINE					# labelStmt
 	| NEWLINE						# blankStmt
 	;
 
-expr: INT							# intExpr
+expr: LABEL							# labelExpr
+	| INT							# intExpr
 	| ID							# idExpr
 	;
-
 
 // Lexer Rules
 COMMENT :  '//' ~( '\r' | '\n' )* -> skip;
@@ -63,8 +64,9 @@ POP: 'pop';
 CALL: 'call';
 RET: 'ret';
 HALT: 'halt';
+LABEL: ID ':';
 
-ID: [a-zA-Z]+;
+ID: [a-zA-Z][a-zA-Z0-9_]+;
 INT: [0-9]+;
 NEWLINE : [\r\n]+;
 
