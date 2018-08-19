@@ -1,17 +1,18 @@
-﻿using Mono.Options;
+﻿using Antlr4.Runtime;
+using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using vm1_lib;
 
-namespace vm1_console
+namespace vm1_assembler
 {
     class Program
     {
         class Options
         {
             public string sourcePath;
-            public bool trace = false;
+            public string outputPath;
             public bool shouldShowHelp = false;
         }
 
@@ -21,7 +22,7 @@ namespace vm1_console
 
             var options = new OptionSet {
                 { "s|sourcePath=", "assembly source file path.", a => o.sourcePath = a },
-                { "t|trace", "trace output.", a => o.trace = a != null },
+                { "o|outputPath=", "bytecoude output file path.", a => o.outputPath = a },
                 { "h|help", "show this message and exit", h => o.shouldShowHelp = h != null },
             };
 
@@ -31,7 +32,8 @@ namespace vm1_console
                 // parse the command line
                 extra = options.Parse(args);
                 if (o.shouldShowHelp
-                    || string.IsNullOrEmpty(o.sourcePath))
+                    || string.IsNullOrEmpty(o.sourcePath)
+                    || string.IsNullOrEmpty(o.outputPath))
                 {
                     showUsage(options);
                     return;
@@ -45,26 +47,15 @@ namespace vm1_console
                 return;
             }
 
-            Console.WriteLine("* vm1-console started");
-            int[] code = null;
-
-            using (FileStream fs = new FileStream(o.sourcePath, FileMode.Open))
+            Console.WriteLine("* assembling...");
+            using (StreamReader sr = new StreamReader(o.sourcePath))
+            using(FileStream fs = new FileStream(o.outputPath, FileMode.Create))
             {
-                code = new int[fs.Length / 4];
-
-                using (BinaryReader binaryStream = new BinaryReader(fs))
-                {
-                    for (var i = 0; i < code.Length; i++)
-                    {
-                        code[i] = binaryStream.ReadInt32();
-                    }
-                }
+                AsmCompiler c = new AsmCompiler();
+                c.Run(new AntlrInputStream(sr), fs);
+                fs.Flush();
             }
-
-            Cpu c = new Cpu(code, 0, 256, o.trace);
-            c.Run();
-
-            Console.WriteLine("* vm1-console completed");
+            Console.WriteLine("* done!");
         }
 
         static void showUsage(OptionSet p)
