@@ -11,6 +11,8 @@ namespace vm1_console
         class Options
         {
             public string sourcePath;
+            public int dataSize = 0;
+            public int stackSize = 128;
             public bool trace = false;
             public bool shouldShowHelp = false;
         }
@@ -21,6 +23,8 @@ namespace vm1_console
 
             var options = new OptionSet {
                 { "s|sourcePath=", "assembly source file path.", a => o.sourcePath = a },
+                { "g|globalDataSize=", "global data size in byte.", a => o.dataSize = int.Parse(a) },
+                { "c|stackSize=", "stack size in count of elements (1=4bytes).", a => o.stackSize = int.Parse(a) },
                 { "t|trace", "trace output.", a => o.trace = a != null },
                 { "h|help", "show this message and exit", h => o.shouldShowHelp = h != null },
             };
@@ -61,7 +65,7 @@ namespace vm1_console
                 }
             }
 
-            Cpu c = new Cpu(code, 0, 256, o.trace);
+            Cpu c = new Cpu(code, 0, o.dataSize, o.stackSize, o.trace);
             c.Run();
 
             Console.WriteLine("* vm1-console completed");

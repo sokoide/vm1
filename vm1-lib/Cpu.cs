@@ -4,9 +4,6 @@ namespace vm1_lib
 {
     public class Cpu
     {
-        // consts
-        public const int kStackSize = 128;
-
         // registers
         internal int ip;
         internal int sp;
@@ -21,13 +18,13 @@ namespace vm1_lib
         internal bool traceOutput;
 
         #region ctor
-        public Cpu(int[] code, int ip, int dataSize, bool traceOutput = false)
+        public Cpu(int[] code, int ip, int dataSize, int stackSize, bool traceOutput = false)
         {
             this.code = code;
             this.ip = ip;
             this.sp = -1;
             globals = new int[dataSize];
-            stack = new int[kStackSize];
+            stack = new int[stackSize];
             this.traceOutput = traceOutput;
         }
         #endregion
@@ -40,17 +37,16 @@ namespace vm1_lib
             {
                 int opcode = code[ip];
                 ByteCode.Instruction instruction = ByteCode.Instructions[opcode];
-                trace("{0:d04}: {1}", ip, instruction.Name);
+                Trace("{0:d04}: {1}", ip, instruction.Name);
                 if (instruction.NumOperands == 1)
                 {
-                    trace("\t{0}", code[ip + 1]);
+                    Trace("\t{0}", code[ip + 1]);
                 }
                 else if (instruction.NumOperands == 2)
                 {
-                    trace("\t{0}", code[ip + 2]);
+                    Trace("\t{0}", code[ip + 2]);
                 }
-                traceln("");
-
+                TraceLn("");
                 ip++;
 
                 switch (opcode)
@@ -151,15 +147,35 @@ namespace vm1_lib
                         throw new NotImplementedException(
                             string.Format("Instruction {0} not implemented.", opcode));
                 }
-                dump();
+                DumpStack();
+                DumpData();
+                TraceLn("");
             }
         }
 
-        private void dump()
+        private void DumpStack()
         {
+            Trace("\tStack: ");
+            for (int i = 0; i < sp;i++){
+                Trace("{0:#,0} ", stack[i]);
+            }
+            TraceLn("");
         }
 
-        private void trace(string fmt, params object[] p)
+        private void DumpData(){
+            int addr;
+            for (addr = 0; addr < globals.Length; addr+=16)
+            {
+                Trace("\tData {0:X4}: ", addr);
+                for (int i = 0; i < 16 && (addr + i) <  globals.Length; i++)
+                {
+                    Trace("{0:X4} ", globals[addr + i]);
+                }
+                TraceLn("");
+            }
+        }
+
+        private void Trace(string fmt, params object[] p)
         {
             if (traceOutput)
             {
@@ -167,7 +183,7 @@ namespace vm1_lib
             }
         }
 
-        private void traceln(string fmt, params object[] p)
+        private void TraceLn(string fmt, params object[] p)
         {
             if (traceOutput)
             {
