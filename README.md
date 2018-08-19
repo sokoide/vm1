@@ -44,10 +44,10 @@ output file (bytecode): Sample.bc
 dotnet vm1-assembler\bin\Debug\netcoreapp2.1\vm1-assembler.dll -s vm1-assembler\Sample.asm -o Sample.bc
 ```
 
-* Labels and label jump is not supported yet
+* Labels and label jump/label call are supported
 
 ```
-// labels (FUNC:) are not supported yet
+// labels (FUNC:) are supported
 iconst 42
 call FUNC: 1
 halt

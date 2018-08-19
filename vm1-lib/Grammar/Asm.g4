@@ -67,7 +67,7 @@ HALT: 'halt';
 LABEL: ID ':';
 
 ID: [a-zA-Z][a-zA-Z0-9_]+;
-INT: [0-9]+;
+INT: [+-]?[0-9]+;
 NEWLINE : [\r\n]+;
 
 WS: [ \t]+ -> skip;

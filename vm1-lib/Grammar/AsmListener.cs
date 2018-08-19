@@ -183,7 +183,9 @@ namespace vm1_lib.Grammar
                             context.expr(1).getAltNumber()
                 );
             WriteInt32Code(ByteCode.CALL);
-            WriteInt32Code(int.Parse(context.expr(0).GetText()));
+            //WriteInt32Code(int.Parse(context.expr(0).GetText()));
+            Type t = context.expr(0).GetType();
+            HandleAddressLabel(t, context.expr(0).GetText());
             WriteInt32Code(int.Parse(context.expr(1).GetText()));
         }
 

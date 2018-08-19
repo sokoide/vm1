@@ -56,14 +56,14 @@ namespace vm1_test
             MemoryStream mso = new MemoryStream();
             MemoryStream msi = MakeInput(new string[]{
                 "br LABEL1:",   // addr 0: code: 6, 7
-                "halt",         // addr 2: code: 18
+                "halt",         // addr 2: code: 0x12
                 "brt LABEL2:",  // addr 3, code: 7, 8
                 "brf LABEL3:",  // addr 5, code: 8, 8
                 "LABEL1:",      // (only label)
-                "halt",         // addr 7: code 18
+                "halt",         // addr 7: code 0x12
                 "LABEL2:",      // (only label)
                 "LABEL3:",      // (only label)
-                "halt",         // addr 8: code 18
+                "halt",         // addr 8: code 0x12
             });
 
             c.Run(new AntlrInputStream(msi), mso);
@@ -109,6 +109,70 @@ namespace vm1_test
             Assert.Equal(0x00, result[33]);
             Assert.Equal(0x00, result[34]);
             Assert.Equal(0x00, result[35]);
+        }
+
+        [Fact]
+        public void TestAsmCompilerLabalCall()
+        {
+            AsmCompiler c = new AsmCompiler();
+            MemoryStream mso = new MemoryStream();
+            MemoryStream msi = MakeInput(new string[]{
+                "iconst 42",    // addr 0, code 0x9
+                "call FUNC1: 1",// addr 2, code 0x10
+                "halt",         // addr 5, code 0x12
+                "FUNC1:",       // (only label)
+                "load -3",      // addr 6, code 0x0A
+                "print",        // addr 8, code 0x0E
+                "ret",          // addr 9, code 0x11
+            });
+
+            c.Run(new AntlrInputStream(msi), mso);
+            mso.Flush();
+
+            OutputBinaryStream(mso);
+
+            byte[] result = mso.ToArray();
+            Assert.Equal(40, result.Length);
+            Assert.Equal(0x09, result[0]);  // br LABEL1:
+            Assert.Equal(0x00, result[1]);
+            Assert.Equal(0x00, result[2]);
+            Assert.Equal(0x00, result[3]);
+            Assert.Equal(0x2A, result[4]);
+            Assert.Equal(0x00, result[5]);
+            Assert.Equal(0x00, result[6]);
+            Assert.Equal(0x00, result[7]);
+            Assert.Equal(0x10, result[8]);  // call 0x06 1
+            Assert.Equal(0x00, result[9]);
+            Assert.Equal(0x00, result[10]);
+            Assert.Equal(0x00, result[11]);
+            Assert.Equal(0x06, result[12]); 
+            Assert.Equal(0x00, result[13]);
+            Assert.Equal(0x00, result[14]);
+            Assert.Equal(0x00, result[15]);
+            Assert.Equal(0x01, result[16]);
+            Assert.Equal(0x00, result[17]);
+            Assert.Equal(0x00, result[18]);
+            Assert.Equal(0x00, result[19]);
+            Assert.Equal(0x12, result[20]); // halt
+            Assert.Equal(0x00, result[21]);
+            Assert.Equal(0x00, result[22]);
+            Assert.Equal(0x00, result[23]);
+            Assert.Equal(0x0A, result[24]); // load -3
+            Assert.Equal(0x00, result[25]);
+            Assert.Equal(0x00, result[26]);
+            Assert.Equal(0x00, result[27]);
+            Assert.Equal(0xFD, result[28]); 
+            Assert.Equal(0xFF, result[29]);
+            Assert.Equal(0xFF, result[30]);
+            Assert.Equal(0xFF, result[31]);
+            Assert.Equal(0x0E, result[32]); // print
+            Assert.Equal(0x00, result[33]);
+            Assert.Equal(0x00, result[34]);
+            Assert.Equal(0x00, result[35]);
+            Assert.Equal(0x11, result[36]); // ret
+            Assert.Equal(0x00, result[37]);
+            Assert.Equal(0x00, result[38]);
+            Assert.Equal(0x00, result[39]);
         }
 
         #region private methods
