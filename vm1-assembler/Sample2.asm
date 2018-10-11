@@ -1,8 +1,20 @@
-﻿// push 42
-iconst 42
+﻿// pseudo code ---
+// foo(42)
+// foo(5)
+// exit
+// func foo(a) {
+//   print a+1
+// } 
 
 // call FUNC with 1 argument (42)
+iconst 42
 call FUNC: 1
+
+// call FUNC with 1 argument (5)
+iconst 5
+call FUNC: 1
+
+// end of the program
 halt
 
 // FUNC
@@ -15,12 +27,12 @@ FUNC:
 // SP = return address (IP)
 load -3
 
-// push 3
-iconst 3
+// push 1
+iconst 1
 
-// add 42+3
+// add arg+1
 iadd
 
-// pop and print 45
+// pop and print result (arg+1)
 print
 ret
