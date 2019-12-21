@@ -14,7 +14,7 @@ namespace vm1_test
                 ByteCode.ICONST, 99, ByteCode.HALT,
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(3, cpu.ip);
             Assert.Equal(0, cpu.sp);
@@ -29,7 +29,7 @@ namespace vm1_test
                 ByteCode.ICONST, 5, ByteCode.ICONST, 2, ByteCode.IADD, ByteCode.HALT,
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(6, cpu.ip);
             Assert.Equal(0, cpu.sp);
@@ -45,7 +45,7 @@ namespace vm1_test
                 ByteCode.ICONST, 5, ByteCode.ICONST, 7, ByteCode.ISUB, ByteCode.HALT,
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(6, cpu.ip);
             Assert.Equal(0, cpu.sp);
@@ -61,7 +61,7 @@ namespace vm1_test
                 ByteCode.ICONST, 5, ByteCode.ICONST, 7, ByteCode.IMUL, ByteCode.HALT,
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(6, cpu.ip);
             Assert.Equal(0, cpu.sp);
@@ -81,7 +81,7 @@ namespace vm1_test
                 ByteCode.ICONST, a, ByteCode.ICONST, b, ByteCode.ILT, ByteCode.HALT,
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(6, cpu.ip);
             Assert.Equal(0, cpu.sp);
@@ -101,7 +101,7 @@ namespace vm1_test
                 ByteCode.ICONST, a, ByteCode.ICONST, b, ByteCode.IEQ, ByteCode.HALT,
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(6, cpu.ip);
             Assert.Equal(0, cpu.sp);
@@ -117,7 +117,7 @@ namespace vm1_test
                 ByteCode.ICONST, 42, ByteCode.GSTORE, 2, ByteCode.HALT,
             };
             Cpu cpu = new Cpu(code, 0, 10, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(5, cpu.ip);
             Assert.Equal(-1, cpu.sp);
@@ -136,7 +136,7 @@ namespace vm1_test
             };
             Cpu cpu = new Cpu(code, 0, 10, 128, true);
             cpu.globals[1] = 42;
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(3, cpu.ip);
             Assert.Equal(0, cpu.sp);
@@ -159,7 +159,7 @@ namespace vm1_test
             cpu.stack[3] = 1; // return address
             cpu.sp = 3;
             cpu.fp = cpu.sp;
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(7, cpu.ip);
             Assert.Equal(4, cpu.sp);
@@ -179,7 +179,7 @@ namespace vm1_test
                 ByteCode.HALT, // 5
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
             Assert.Equal(42, cpu.stack[0]);
             Assert.Equal(6, cpu.ip);
         }
@@ -197,7 +197,7 @@ namespace vm1_test
                 ByteCode.HALT, // 7
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
             Assert.Equal(42, cpu.stack[0]);
             Assert.Equal(8, cpu.ip);
             Assert.Equal(0, cpu.sp);
@@ -215,7 +215,7 @@ namespace vm1_test
                 ByteCode.HALT, // 7
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
             Assert.Equal(1, cpu.stack[0]);
             Assert.Equal(5, cpu.ip);
             Assert.Equal(-1, cpu.sp);
@@ -234,7 +234,7 @@ namespace vm1_test
                 ByteCode.HALT, // 7
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
             Assert.Equal(0, cpu.stack[0]);
             Assert.Equal(5, cpu.ip);
             Assert.Equal(-1, cpu.sp);
@@ -252,7 +252,7 @@ namespace vm1_test
                 ByteCode.HALT, // 7
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(42, cpu.stack[0]);
             Assert.Equal(8, cpu.ip);
@@ -272,7 +272,7 @@ namespace vm1_test
                 ByteCode.HALT, // 7
             };
             Cpu cpu = new Cpu(code, 0, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
 
             Assert.Equal(8, cpu.ip);
             Assert.Equal(1, cpu.sp);
@@ -307,7 +307,7 @@ namespace vm1_test
                 ByteCode.HALT,
             };
             Cpu cpu = new Cpu(code, 22, 0, 128, true);
-            cpu.Run();
+            cpu.Run(Console.Out);
             // FACT(6) = 6 * 5 * 4 * 3 * 2 * 1 = 720
             Assert.Equal(720, cpu.stack[0]);
         }

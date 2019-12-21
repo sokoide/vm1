@@ -66,7 +66,7 @@ namespace vm1_console
             }
 
             Cpu c = new Cpu(code, 0, o.dataSize, o.stackSize, o.trace);
-            c.Run();
+            c.Run(Console.Out);
 
             Console.WriteLine("* vm1-console completed");
         }

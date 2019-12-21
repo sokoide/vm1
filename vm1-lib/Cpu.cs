@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace vm1_lib
 {
@@ -29,7 +30,7 @@ namespace vm1_lib
         }
         #endregion
 
-        public void Run()
+        public void Run(TextWriter o)
         {
             int a, b, v, addr, offset, nargs;
             bool running = true;
@@ -117,7 +118,7 @@ namespace vm1_lib
                         globals[addr] = stack[sp--];
                         break;
                     case ByteCode.PRINT:
-                        Console.WriteLine(stack[sp--]);
+                        o.WriteLine(stack[sp--]);
                         break;
                     case ByteCode.POP:
                         sp--;
@@ -156,18 +157,20 @@ namespace vm1_lib
         private void DumpStack()
         {
             Trace("\tStack: ");
-            for (int i = 0; i < sp;i++){
+            for (int i = 0; i < sp; i++)
+            {
                 Trace("{0:#,0} ", stack[i]);
             }
             TraceLn("");
         }
 
-        private void DumpData(){
+        private void DumpData()
+        {
             int addr;
-            for (addr = 0; addr < globals.Length; addr+=16)
+            for (addr = 0; addr < globals.Length; addr += 16)
             {
                 Trace("\tData {0:X4}: ", addr);
-                for (int i = 0; i < 16 && (addr + i) <  globals.Length; i++)
+                for (int i = 0; i < 16 && (addr + i) < globals.Length; i++)
                 {
                     Trace("{0:X4} ", globals[addr + i]);
                 }
