@@ -32,16 +32,16 @@ halt
 
 
 output file (bytecode): Sample.bc
-09 00 00 00 01 00 00 00  0E 00 00 00 09 00 00 00 
-02 00 00 00 0E 00 00 00  09 00 00 00 03 00 00 00 
-0E 00 00 00 09 00 00 00  28 00 00 00 09 00 00 00 
-02 00 00 00 01 00 00 00  0E 00 00 00 12 00 00 00 
+09 00 00 00 01 00 00 00  0E 00 00 00 09 00 00 00
+02 00 00 00 0E 00 00 00  09 00 00 00 03 00 00 00
+0E 00 00 00 09 00 00 00  28 00 00 00 09 00 00 00
+02 00 00 00 01 00 00 00  0E 00 00 00 12 00 00 00
 ```
 
 * Sample usage
 
 ```cmd
-dotnet vm1-assembler\bin\Debug\netcoreapp2.1\vm1-assembler.dll -s vm1-assembler\Sample.asm -o Sample.bc
+dotnet run --project vm1-assembler -s vm1-assembler/Sample.asm -o Sample.bc
 ```
 
 * Labels and label jump/label call are supported
@@ -63,7 +63,7 @@ ret
 * Sample usage
 
 ```cmd
-dotnet vm1-console\bin\Debug\netcoreapp2.1\vm1-console.dll -s Sample.bc -t true
+dotnet run --project vm1-console -s Sample.bc -t true
 ```
 
 ## Calling Convention
