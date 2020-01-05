@@ -43,13 +43,13 @@ namespace vm1_assembler
             {
                 Console.Write("Exception: ");
                 Console.WriteLine(e.Message);
-                Console.WriteLine("Try `greet --help' for more information.");
+                Console.WriteLine("Try `vm1-assembler --help' for more information.");
                 return;
             }
 
             Console.WriteLine("* assembling...");
             using (StreamReader sr = new StreamReader(o.sourcePath))
-            using(FileStream fs = new FileStream(o.outputPath, FileMode.Create))
+            using (FileStream fs = new FileStream(o.outputPath, FileMode.Create))
             {
                 AsmCompiler c = new AsmCompiler();
                 c.Run(new AntlrInputStream(sr), fs);

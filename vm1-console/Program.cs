@@ -45,7 +45,7 @@ namespace vm1_console
             {
                 Console.Write("Exception: ");
                 Console.WriteLine(e.Message);
-                Console.WriteLine("Try `greet --help' for more information.");
+                Console.WriteLine("Try `vm1-console --help' for more information.");
                 return;
             }
 
